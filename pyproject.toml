@@ -1,0 +1,141 @@
+[build-system]
+build-backend = "setuptools.build_meta"
+requires = [
+  "setuptools>=61",
+  "setuptools_scm[toml]>=6.2",
+]
+
+[project]
+name = "github-action-example-python"
+description = "GitHub Actions Example with Python"
+readme = "README.md"
+keywords = [
+  "demo",
+  "digitalroots",
+  "github actions",
+  "tutorial",
+]
+license = {file="LICENSE"}
+authors = [{name = "Carlos Meza", email = "hire@carlosmeza.com"}]
+requires-python = ">=3.8"
+classifiers = [
+  "Development Status :: 1 - Planning", # "Development Status :: 2 - Pre-Alpha", "Development Status :: 3 - Alpha", "Development Status :: 4 - Beta", "Development Status :: 5 - Production/Stable", "Development Status :: 6 - Mature", "Development Status :: 7 - Inactive
+  "License :: OSI Approved :: Apache Software License",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11", # "Programming Language :: Python :: 3.12",
+]
+dynamic = [
+  "dependencies",
+  "version",
+]
+[project.optional-dependencies]
+cli = [
+  "typer~=0.9.0",
+]
+docs = [
+  "mdx-truly-sane-lists",
+  "mkdocs-exclude",
+  "mkdocs-gen-files",
+  "mkdocs-jupyter",
+  "mkdocs-literate-nav",
+  "mkdocs-material",
+  "mkdocs-minify-plugin",
+  "mkdocs-redirects!=1.0.4",
+  "mkdocs-section-index",
+  "mkdocstrings-python",
+  "notebook", # required to execute Jupyter Notebooks
+]
+lint = [
+  "bandit[toml]",
+  "pylint>=2.15", # Support for py3.11+
+]
+test = [
+  "pre-commit~=2.21",
+  "pytest~=7.2",
+  "tox~=4.3",
+]
+[project.urls]
+"Homepage" = "https://github.com/xsc27/github-action-example-python"
+"Issues" = "https://github.com/xsc27/github-action-example-python/issues"
+"Source" = "https://github.com/xsc27/github-action-example-python"
+[project.scripts]
+httpcat = "main:run"
+
+[tool.setuptools]
+py-modules = ["main", "cli"]
+zip-safe = true
+
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirements.txt"]}
+
+[tool.setuptools_scm]
+
+[tool.black]
+line-length = 120
+
+[tool.isort]
+profile = "black"
+line_length = 120
+known_first_party = "copier_template_test"
+
+[tool.flake8]
+ignore = [
+    "D105",  # Missing docstring in magic method
+    "PT013",  # Found incorrect import of pytest, use simple 'import pytest' instead
+]
+max-line-length = 120
+
+[tool.pytest.ini_options]
+addopts = "--verbosity=2 --doctest-modules --ignore=docs --showlocals -rfp --strict-markers"
+log_cli = false
+log_level = "DEBUG"
+log_cli_level = "INFO"
+log_file_level = "DEBUG"
+testpaths = ["tests"]
+
+[tool.coverage.run]
+branch = true
+omit = ["tests/*"]
+
+[tool.coverage.report]
+precision = 2
+show_missing = true
+exclude_lines = [
+    "pragma: no cover",
+    "if not config.dryrun",
+]
+
+[tool.bandit]
+skips = [
+    "B404",  # import-subprocess
+]
+[tool.bandit.assert_used]
+skips = ["**/tests/test_*.py"]
+
+[tool.pylint.config]
+max-line-length = 120
+persistent = "no"
+enable = [
+    "F",  # Fatal
+    "E",  # Error
+    "W",  # Warning
+    "C",  # Convention
+    "I",  # Informational
+]
+disable = [
+    "R",  # Refactor
+    "fixme",
+    "locally-disabled",
+    # "line-too-long",  # redundant from flake8
+    # "missing-class-docstring",  # redundant from flake8-docstrings
+    # "missing-function-docstring",  # redundant from flake8-docstrings
+    # "missing-module-docstring",  # redundant from flake8-docstrings
+    "suppressed-message",
+    # "undefined-variable",  # redundant from flake8
+    # "ungrouped-imports",  # redundant from isort
+    # "unused-variable",  # redundant from flake8
+    # "method-cache-max-size-none",  # redundant from bugbear
+]

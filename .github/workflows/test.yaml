@@ -1,0 +1,24 @@
+name: Test
+
+on:
+  workflow_dispatch:
+    inputs:
+      status_code:
+        description: HTTP Status Code
+        default: "100"
+      api_token:
+        description: API Token
+        default: APIKEY
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - id: httpcat
+        uses: ./
+        with:
+          status_code: ${{ inputs.status_code }}
+          api_token: ${{ inputs.api_token }}
+      - run: echo 'Description - ${{ steps.httpcat.outputs.description }}'
+      - run: echo 'Image - ${{ steps.httpcat.outputs.image }}'
