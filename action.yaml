@@ -1,0 +1,17 @@
+name: GitHub Action Example with Python
+description: GitHub Action Example with Python
+inputs:
+  status_code:
+    description: HTTP Status Code
+    required: true
+  api_token:
+    description: API Token
+    required: true
+outputs:
+  description:
+    description: Description of the HTTP status code.
+  image:
+    description: Image URL
+runs:
+  using: docker
+  image: Dockerfile
