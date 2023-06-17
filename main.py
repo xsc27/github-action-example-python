@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""Main business logic."""
 from __future__ import annotations  # Python < 3.10 compatiblity
 
 import json
@@ -6,7 +7,7 @@ import sys
 from typing import Self, TypeVar
 
 from httpx import HTTPError, request
-from pydantic import BaseSettings, SecretStr, ValidationError
+from pydantic import BaseSettings, SecretStr, ValidationError, validator
 
 URL = "https://httpcats.com"
 HTTP_STATUS_CODE_RANGE = (100, 599)
@@ -15,13 +16,15 @@ TInputs = TypeVar("TInputs", bound="Inputs")
 
 
 class Inputs(BaseSettings):
+    """GitHub Action inputs."""
+
     # Define defaults at the APIs
     # i.e., action.yaml and the run_from_cli function
     input_status_code: int
     input_api_token: SecretStr
 
     @validator("input_status_code")
-    def check_status_code_range(cls: Self, v: int) -> int:  # noqa: N805
+    def check_status_code_range(cls, v: int) -> int:  # noqa: N805
         """Check if the status code is in a valid range.
 
         Args:
@@ -74,12 +77,10 @@ def run(inputs: Inputs | None = None) -> dict[str, str | int]:
     data = resp.json()
     data.pop("image", None)
 
+    print(json.dumps(data, indent=2))
+
     return data
 
 
-def print_json(data: dict[str, str | int]):
-    print(json.dumps(data, indent=2))
-
-
 if __name__ == "__main__":
-    print_json(get_cat())
+    run()

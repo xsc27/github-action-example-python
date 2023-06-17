@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""GitHub Action module."""
 from __future__ import annotations  # Python < 3.10 compatiblity
 
 import io
@@ -6,15 +7,16 @@ import logging
 import os
 from pathlib import Path
 
-from main import get_cat, print_json
-
-
-def to_md(data: dict[str, str | int]) -> str:
-    name = f"{data['status_code']} - {data['title']}"
-    return f"## {name}\n![{name}]({data['url']}.jpg)"
+import main
 
 
 def write(out_env: str, text: str):
+    """Write to GitHub Action files.
+
+    Args:
+        out_env (str): Name of the enviroment variable
+        text (str): Text to write
+    """
     with Path(f).open("at") if (f := os.getenv(out_env)) else io.StringIO() as fid:
         fid.write(f"\n{text}\n")
         if isinstance(fid, io.StringIO):
@@ -22,9 +24,10 @@ def write(out_env: str, text: str):
 
 
 def run():
-    data = get_cat()
-    print_json(data)
-    write("GITHUB_STEP_SUMMARY", to_md(data))
+    """Run main GitHub Action business logic."""
+    data = main.run()
+    title = f"{data['status_code']} - {data['title']}"
+    write("GITHUB_STEP_SUMMARY", f"## {title}\n![{title}]({data['url']}.jpg)")
     write("GITHUB_OUTPUT", f"description={data['title']}\nimage={data['url']}")
 
 
