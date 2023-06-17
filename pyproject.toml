@@ -62,7 +62,7 @@ test = [
 "Issues" = "https://github.com/xsc27/github-action-example-python/issues"
 "Source" = "https://github.com/xsc27/github-action-example-python"
 [project.scripts]
-httpcat = "main:run"
+httpcat = "cli:run"
 
 [tool.setuptools]
 py-modules = ["main", "cli"]
@@ -75,6 +75,30 @@ dependencies = {file = ["requirements.txt"]}
 
 [tool.black]
 line-length = 120
+
+[tool.ruff]
+# https://beta.ruff.rs/docs/rules/
+select = [
+  "F", "E", "W", "C90", "I", "N", "D", "UP", "YTT", "ANN", "ASYNC", "S", "BLE", "FBT", "B", "A", "COM", "C4",
+  "DTZ", "T10", "EM", "EXE", "FA", "ISC", "ICN", "G", "INP", "PIE", "PYI", "PT", "Q", "RSE", "RET", "SLF",
+  "SLOT", "SIM", "TID", "TCH", "INT", "ARG", "PTH", "TD", "FIX", "ERA", "PGH", "PL", "TRY", "FLY", "PERF", "RUF"
+]
+respect-gitignore = true
+show-fixes = true
+line-length = 120
+# opt in to linting Jupyter Notebook
+include = ["*.py", "*.pyi", "**/pyproject.toml", "*.ipynb"]
+fix = true
+format = "grouped"
+show-source = true
+[tool.ruff.flake8-type-checking]
+exempt-modules = ["typing", "pydantic"]
+# runtime-evaluated-base-classes = ["pydantic.BaseModel"]
+strict = true
+[tool.ruff.pydocstyle]
+convention = "google"
+[tool.ruff.pylint]
+allow-magic-value-types = []
 
 [tool.isort]
 profile = "black"
@@ -122,11 +146,12 @@ enable = [
     "F",  # Fatal
     "E",  # Error
     "W",  # Warning
+    "R",  # Refactor
     "C",  # Convention
     "I",  # Informational
 ]
 disable = [
-    "R",  # Refactor
+    # "R",  # Refactor
     "fixme",
     "locally-disabled",
     # "line-too-long",  # redundant from flake8
