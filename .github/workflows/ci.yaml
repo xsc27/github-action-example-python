@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push: {}
+  workflow_dispatch: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Get Python version
+        id: python
+        run: echo "version=$(python -V | sed 's/ /_/g')" >> "$GITHUB_OUTPUT"
+      - uses: actions/cache@v3
+        with:
+          path: ~/.cache/pre-commit
+          # yamllint disable-line rule:line-length
+          key: pre-commit-${{ runner.os }}-${{ steps.python.outputs.version }}-${{ hashFiles('.pre-commit-config.yaml') }}
+      - name: Run ruff-github
+        run: pre-commit run --all-files --hook-stage manual ruff-github || true
+      - name: Run pre-commit
+        run: pre-commit run --color=always --all-files --show-diff-on-failure
