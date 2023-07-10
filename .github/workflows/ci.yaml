@@ -17,6 +17,8 @@ jobs:
       - name: Get Python version
         id: python
         run: echo "version=$(python -V | sed 's/ /_/g')" >> "$GITHUB_OUTPUT"
+      - name: Install pre-commit
+        run: pipx install pre-commit
       - uses: actions/cache@v3
         with:
           path: ~/.cache/pre-commit
