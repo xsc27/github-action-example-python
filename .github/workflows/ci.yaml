@@ -8,21 +8,31 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-
 jobs:
   run:
     runs-on: ubuntu-latest
+    env:
+      PRE_COMMIT_HOME: ${{ github.workspace }}/.cache/pre-commit
+      RUFF_FORMAT: github
+      RUFF_CACHE_DIR: ${{ github.workspace }}/.cache/ruff
     steps:
       - uses: actions/checkout@v3
       - name: Get Python version
         id: python
         run: echo "version=$(python -V | sed 's/ /_/g')" >> "$GITHUB_OUTPUT"
+      # - name: Install pre-commit
+      #   run: pipx install pre-commit
       - uses: actions/cache@v3
         with:
-          path: ~/.cache/pre-commit
+          path: ${{ env.PRE_COMMIT_HOME }}
           # yamllint disable-line rule:line-length
           key: pre-commit-${{ runner.os }}-${{ steps.python.outputs.version }}-${{ hashFiles('.pre-commit-config.yaml') }}
-      - name: Run ruff-github
-        run: pre-commit run --all-files --hook-stage manual ruff-github || true
+      - uses: actions/cache@v3
+        with:
+          path: ${{ env.RUFF_CACHE_DIR }}
+          # yamllint disable-line rule:line-length
+          key: ruff-${{ runner.os }}-${{ hashFiles('pyproject.toml') }}
+      # - name: Run ruff-github
+      #   run: pre-commit run --all-files --hook-stage manual ruff-github || true
       - name: Run pre-commit
-        run: pre-commit run --color=always --all-files --show-diff-on-failure
+        run: pipx run pre-commit run --color=always --all-files --show-diff-on-failure
