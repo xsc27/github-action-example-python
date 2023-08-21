@@ -4,15 +4,13 @@ from __future__ import annotations  # Python < 3.10 compatiblity
 
 import json
 import sys
-from typing import Self, TypeVar
+from typing import Any, Self, Type
 
 from httpx import HTTPError, request
 from pydantic import BaseSettings, SecretStr, ValidationError, validator
 
 URL = "https://httpcats.com"
 HTTP_STATUS_CODE_RANGE = (100, 599)
-
-TInputs = TypeVar("TInputs", bound="Inputs")
 
 
 class Inputs(BaseSettings):
@@ -24,11 +22,11 @@ class Inputs(BaseSettings):
     input_api_token: SecretStr
 
     @validator("input_status_code")
-    def check_status_code_range(cls, v: int) -> int:  # noqa: N805
+    def check_status_code_range(cls: Self, val: int) -> int:  # noqa: N805
         """Check if the status code is in a valid range.
 
         Args:
-            v (int): HTTP status code
+            val (int): HTTP status code
 
         Raises:
             ValueError: HTTP status code is out of range.
@@ -36,14 +34,13 @@ class Inputs(BaseSettings):
         Returns:
             int: A valid HTTP status code
         """
-        if v < HTTP_STATUS_CODE_RANGE[0] or v > HTTP_STATUS_CODE_RANGE[1]:
+        if val < HTTP_STATUS_CODE_RANGE[0] or val > HTTP_STATUS_CODE_RANGE[1]:
             msg = "Valid HTTP status codes are from 100 to 599."
             raise ValueError(msg)
-        return v
+        return val
 
     @classmethod
-    def init(cls: type[Self], kwargs: dict[str, str | int | SecretStr] | None = None) -> Self:
-        # def init(cls: type[Self], kwargs: dict[str, str | int] | None = None) -> Self:
+    def init(cls: Type[Self], kwargs: dict[str, Any] | None = None) -> Self:  # noqa: UP006
         """Instantiate object.
 
         Args:
@@ -74,7 +71,7 @@ def run(inputs: Inputs | None = None) -> dict[str, str | int]:
     except HTTPError as err:
         sys.exit(str(err))
 
-    data = resp.json()
+    data: dict[str, str | int] = resp.json()
     data.pop("image", None)
 
     print(json.dumps(data, indent=2))
