@@ -4,10 +4,13 @@ from __future__ import annotations  # Python < 3.10 compatiblity
 
 import json
 import sys
-from typing import Any, Self, Type
+from typing import TYPE_CHECKING, Any
 
 from httpx import HTTPError, request
 from pydantic import BaseSettings, SecretStr, ValidationError, validator
+
+if TYPE_CHECKING:  # Mypy compatiblity
+    from typing_extensions import Self
 
 URL = "https://httpcats.com"
 HTTP_STATUS_CODE_RANGE = (100, 599)
@@ -16,8 +19,6 @@ HTTP_STATUS_CODE_RANGE = (100, 599)
 class Inputs(BaseSettings):
     """GitHub Action inputs."""
 
-    # Define defaults at the APIs
-    # i.e., action.yaml and the run_from_cli function
     input_status_code: int
     input_api_token: SecretStr
 
@@ -40,7 +41,7 @@ class Inputs(BaseSettings):
         return val
 
     @classmethod
-    def init(cls: Type[Self], kwargs: dict[str, Any] | None = None) -> Self:  # noqa: UP006
+    def init(cls: type[Self], kwargs: dict[str, Any] | None = None) -> Self:
         """Instantiate object.
 
         Args:
