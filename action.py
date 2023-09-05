@@ -10,7 +10,7 @@ from pathlib import Path
 import main
 
 
-def write(out_env: str, text: str):
+def write(out_env: str, text: str) -> None:
     """Write to GitHub Action files.
 
     Args:
@@ -23,7 +23,7 @@ def write(out_env: str, text: str):
             logging.info("%s:\n%s", out_env, fid.getvalue())
 
 
-def run():
+def run() -> None:
     """Run main GitHub Action business logic."""
     data = main.run()
     title = f"{data['status_code']} - {data['title']}"

@@ -7,13 +7,13 @@ import typer
 import main
 
 
-def _run(status_code: int, api_token: str = ""):
+def _run(status_code: int, api_token: str = "") -> None:
     """Get HTTP status code Cats."""
     kwargs = {f"input_{k}": v for k, v in locals().items()}
     main.run(main.Inputs.init(kwargs))
 
 
-def run():
+def run() -> None:
     """Run CLI."""
     typer.run(_run)
 
