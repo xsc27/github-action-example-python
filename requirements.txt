@@ -10,6 +10,8 @@ certifi==2023.7.22
     # via
     #   httpcore
     #   httpx
+click==8.1.7
+    # via typer
 h11==0.14.0
     # via httpcore
 httpcore==0.17.3
@@ -27,5 +29,9 @@ sniffio==1.3.0
     #   anyio
     #   httpcore
     #   httpx
+typer==0.9.0
+    # via -r requirements.in
 typing-extensions==4.7.1
-    # via pydantic
+    # via
+    #   pydantic
+    #   typer
