@@ -6,7 +6,7 @@ requires = [
 ]
 
 [project]
-name = "example"
+name = "github-action-example-python"
 description = "GitHub Actions Example with Python"
 readme = "README.md"
 keywords = [
@@ -132,14 +132,17 @@ exclude_lines = [
 ]
 
 [tool.mypy]
-modules = ["main"]
-strict = true
-disallow_any_unimported = true
-show_traceback = true
+exclude = [
+  ".venv",
+  "build",
+]
+new_type_inference = true
 pretty = true
 python_version = "3.8"
-new_type_inference = true
+scripts_are_modules = true
 show_error_code_links = true
+strict = true
+show_traceback = true
 warn_unused_configs = true
 
 
