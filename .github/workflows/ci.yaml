@@ -1,38 +1,35 @@
 name: CI
 
-on:
-  push: {}
-  workflow_dispatch: {}
+on: [push, workflow_dispatch]
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}-ci
   cancel-in-progress: true
 
 jobs:
   run:
+    name: lint
     runs-on: ubuntu-latest
-    env:
-      PRE_COMMIT_HOME: ${{ github.workspace }}/.cache/pre-commit
-      RUFF_FORMAT: github
-      RUFF_CACHE_DIR: ${{ github.workspace }}/.cache/ruff
+    strategy:
+      fail-fast: false
+      matrix:
+        env: [pre-commit, mypy]
     steps:
       - uses: actions/checkout@v3
-      - name: Get Python version
+      - uses: actions/setup-python@v4
         id: python
-        run: echo "version=$(python -V | sed 's/ /_/g')" >> "$GITHUB_OUTPUT"
-      # - name: Install pre-commit
-      #   run: pipx install pre-commit
       - uses: actions/cache@v3
         with:
-          path: ${{ env.PRE_COMMIT_HOME }}
-          # yamllint disable-line rule:line-length
-          key: pre-commit-${{ runner.os }}-${{ steps.python.outputs.version }}-${{ hashFiles('.pre-commit-config.yaml') }}
-      - uses: actions/cache@v3
-        with:
-          path: ${{ env.RUFF_CACHE_DIR }}
-          # yamllint disable-line rule:line-length
-          key: ruff-${{ runner.os }}-${{ hashFiles('pyproject.toml') }}
-      # - name: Run ruff-github
-      #   run: pre-commit run --all-files --hook-stage manual ruff-github || true
-      - name: Run pre-commit
-        run: pipx run pre-commit run --color=always --all-files --show-diff-on-failure
+          path: |
+            .mypy_cache
+            .ruff_cache
+            .tox
+            ~/.cache/pip
+            ~/.cache/pre-commit
+          key: tox-${{ runner.os }}-py${{ steps.python.outputs.python-version }}-${{
+            matrix.env }}-${{ hashFiles('pyproject.toml', 'requirements.txt', 'tox.ini') }}
+      - name: Run tox
+        run: pipx run 'tox~=4.2'
+        env:
+          RUFF_FORMAT: github
+          TOXENV: ${{ matrix.env }}
