@@ -1,1 +1,13 @@
-.venv
+.tox/
+.venv/
+.*_cache/
+**/*.egg-info/
+build/
+
+# Jupyter Lab
+.ipynb_checkpoints
+.jupyter/*
+.jupyter/**.json
+.jupyter/**.jupyterlab-settings
+!.jupyter/jupyter_server_config.d/jupyterlab_rise.json
+!.jupyter/lab/user-settings/@jupyterlab/notebook-extension/tracker.jupyterlab-settings
