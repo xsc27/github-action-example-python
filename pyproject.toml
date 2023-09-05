@@ -132,9 +132,7 @@ exclude_lines = [
 ]
 
 [tool.mypy]
-# packages = ["github-action-example-python"]
-# packages = ["github_action_example_python"]
-packages = ["example"]
+modules = ["main"]
 strict = true
 disallow_any_unimported = true
 show_traceback = true
@@ -143,6 +141,11 @@ python_version = "3.8"
 new_type_inference = true
 show_error_code_links = true
 warn_unused_configs = true
+
+
+[[tool.mypy.overrides]]
+module = "tool.mypy.httpx.*"
+ignore_missing_imports = true
 
 [tool.bandit]
 skips = [
