@@ -1,0 +1,58 @@
+name: Container
+
+on:
+  push:
+    paths:
+      - Containerfile
+      - "**.py"
+  workflow_dispatch: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-container
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - run: sudo sh -c
+          'apt-get -qq update && apt-get install -y qemu-user-static'
+      - uses: actions/checkout@v3
+      - uses: docker/metadata-action@v4
+        id: meta
+        with:
+          images: ${{ github.event.repository.name }}
+          flavor: latest=false
+          tags: |
+              type=ref,event=branch
+              type=ref,event=tag
+              type=sha
+              type=sha,format=long
+              type=raw,value=latest,enable={{is_default_branch}}
+      - uses: redhat-actions/buildah-build@v2
+        id: build
+        with:
+          archs: amd64, arm64, arm
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          containerfiles: Containerfile
+          oci: true
+      - run: buildah inspect ${{ steps.build.outputs.image-with-tag }} | jq .
+      - run: podman run --rm ${{ steps.build.outputs.image }}
+      - uses: redhat-actions/push-to-registry@v2
+        id: push
+        with:
+          image: ${{ steps.build.outputs.image }}
+          tags: ${{ steps.build.outputs.tags }}
+          registry: ghcr.io/${{ github.repository_owner }}
+          username: ${{ github.actor }}
+          password: ${{ github.token }}
+      - name: Create summary
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" << EOL
+          ## Container Details
+          - Image: ${{ steps.build.outputs.image }}
+          - Tags: ${{ steps.build.outputs.tags }}
+          - Tagged Image: ${{ steps.build.outputs.image-with-tag }}
+          - Pushed to: ${{ steps.push.outputs.registry-paths }}"
+          EOL
