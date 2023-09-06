@@ -88,3 +88,10 @@ repos:
     rev: v1.6.25
     hooks:
       - id: actionlint-docker
+  - repo: https://github.com/hadolint/hadolint
+    rev: v2.12.1-beta
+    hooks:
+      - id: hadolint-docker
+        alias: hadolint
+        types: [file]
+        files: ^((Dock|Contain)erfile.*|.*\.(dock|contain)erfile)$
