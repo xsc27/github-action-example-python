@@ -47,7 +47,7 @@ jobs:
       - uses: redhat-actions/buildah-build@v2
         id: build
         with:
-          # archs: amd64, arm64, arm
+          archs: amd64, arm64, arm
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           containerfiles: Containerfile
