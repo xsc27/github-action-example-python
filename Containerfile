@@ -1,6 +1,7 @@
-FROM docker.io/python:3.11-alpine as build
-COPY ** /opt/src/
+ARG PY_VER=3
+FROM docker.io/python:${PY_VER}-alpine as build
 ARG VERSION=0
+COPY ** /opt/src/
 RUN set -eux && \
   pip config --global set global.progress_bar off && \
   pip config --global set global.root_user_action ignore && \
