@@ -1,9 +1,6 @@
-.tox/
-.venv/
-.*_cache/
+Containerfile*
+Dockerfile*
+.*
+
 **/*.egg-info/
 build/
-
-# Jupyter Lab
-.ipynb_checkpoints
-.jupyter/
