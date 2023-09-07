@@ -12,9 +12,6 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-container
   cancel-in-progress: true
 
-env:
-  PY_VER: "3.11"
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -23,6 +20,12 @@ jobs:
     steps:
       - run: sudo sh -c
           'apt-get -qq update && apt-get install -y qemu-user-static'
+      - uses: actions/setup-python@v4
+        id: py
+        with:
+          cache: pip
+          cache-dependency-path: constraints.txt
+      - run: python3 -m pip install setuptools_scm
       - uses: actions/checkout@v3
       - uses: docker/metadata-action@v4
         id: meta
@@ -42,6 +45,10 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           containerfiles: Containerfile
           oci: true
+          extra-args: |
+            --volume="$(python3 -m pip cache --format abspath dir):/root/.cache/pip"
+            --build-arg="VERSION=$(python3 -m setuptools_scm)"
+            --build-arg='PY_VER=${{ steps.py.outputs.python-version }}'
       - run: buildah inspect ${{ steps.build.outputs.image-with-tag }} | jq .
       - run: podman run --rm ${{ steps.build.outputs.image-with-tag }} --help
       - uses: redhat-actions/push-to-registry@v2
@@ -60,6 +67,6 @@ jobs:
           - Tagged Image:
             ${{ steps.build.outputs.image-with-tag }}
           - Pushed to:
-            ${{ steps.push.outputs.registry-paths }}"
-          - Digest: ${{ steps.push.outputs.digest }}"
+            ${{ steps.push.outputs.registry-paths }}
+          - Digest: ${{ steps.push.outputs.digest }}
           EOL
