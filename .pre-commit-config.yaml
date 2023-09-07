@@ -1,4 +1,4 @@
-exclude: ^(requirements\.txt|\.jupyter)$
+exclude: ^(constraints\.txt|\.jupyter)$
 repos:
   - repo: meta
     hooks:
