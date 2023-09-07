@@ -11,6 +11,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-container
   cancel-in-progress: true
 
+env:
+  PY_VER: "3.11"
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -29,7 +32,6 @@ jobs:
               type=ref,event=branch
               type=ref,event=tag
               type=sha
-              type=sha,format=long
               type=raw,value=latest,enable={{is_default_branch}}
       - uses: redhat-actions/buildah-build@v2
         id: build
@@ -44,9 +46,8 @@ jobs:
       - uses: redhat-actions/push-to-registry@v2
         id: push
         with:
-          # image: ${{ github.repository_owner }}/${{ steps.build.outputs.image }}
           tags: ${{ steps.build.outputs.tags }}
-          # registry: ghcr.io/${{ github.repository_owner }}
+          registry: ghcr.io/${{ github.repository_owner }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Create summary
@@ -55,6 +56,9 @@ jobs:
           ## Container Details
           - Image: ${{ steps.build.outputs.image }}
           - Tags: ${{ steps.build.outputs.tags }}
-          - Tagged Image: ${{ steps.build.outputs.image-with-tag }}
-          - Pushed to: ${{ steps.push.outputs.registry-paths }}"
+          - Tagged Image:
+            ${{ steps.build.outputs.image-with-tag }}
+          - Pushed to:
+            ${{ steps.push.outputs.registry-paths }}"
+          - Digest: ${{ steps.push.outputs.digest }}"
           EOL
