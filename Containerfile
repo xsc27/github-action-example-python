@@ -20,4 +20,4 @@ FROM docker.io/python:3.11-alpine
 COPY --from=build /opt/app/ /opt/app/
 USER guest
 ENV PYTHONPATH=/opt/app/
-ENTRYPOINT ["/opt/app/httpcat"]
+ENTRYPOINT ["/opt/app/bin/httpcat"]
