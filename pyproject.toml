@@ -111,6 +111,7 @@ known_first_party = "copier_template_test"
 
 [tool.flake8]
 ignore = [
+    "B008",  # Do not perform function calls in argument defaults
     "D105",  # Missing docstring in magic method
     "PT013",  # Found incorrect import of pytest, use simple 'import pytest' instead
 ]

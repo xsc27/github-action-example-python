@@ -6,13 +6,13 @@ import typer
 
 import main
 
-cli = typer.Typer(no_args_is_help=True)
+cli = typer.Typer()
 
 
 @cli.command()
 def run_cli(
     input_http_code: int = typer.Argument(envvar="INPUT_HTTP_CODE"),
-    input_api_token: str = typer.Option("", envvar="INPUT_API_TOKEN"),  # RUF100,B008
+    input_api_token: str = typer.Option("", envvar="INPUT_API_TOKEN"),
 ) -> None:
     """Get HTTP status code Cats."""
     main.run(main.Inputs.init(locals()))
