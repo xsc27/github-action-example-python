@@ -23,10 +23,9 @@ jobs:
           path: |
             .*_cache
             .tox
-            ~/.cache/pip
-            ~/.cache/pre-commit
+            ~/.cache
           key: tox-${{ runner.os }}-py${{ steps.python.outputs.python-version }}-${{
-            matrix.env }}-${{ hashFiles('pyproject.toml', 'requirements.txt', 'tox.ini') }}
+            matrix.env }}-${{ hashFiles('pyproject.toml', 'constraints.txt', 'tox.ini') }}
       - name: Run tox
         run: pipx run 'tox~=4.2'
         env:
