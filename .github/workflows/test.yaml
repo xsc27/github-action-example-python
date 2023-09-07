@@ -3,7 +3,7 @@ name: Test
 on:
   workflow_dispatch:
     inputs:
-      status_code:
+      http_code:
         description: HTTP Status Code
         default: "100"
       api_token:
@@ -18,7 +18,7 @@ jobs:
       - id: httpcat
         uses: ./
         with:
-          status_code: ${{ inputs.status_code }}
+          http_code: ${{ inputs.http_code }}
           api_token: ${{ inputs.api_token }}
       - run: echo 'Description - ${{ steps.httpcat.outputs.description }}'
       - run: echo 'Image - ${{ steps.httpcat.outputs.image }}'

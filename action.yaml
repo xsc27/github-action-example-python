@@ -1,7 +1,7 @@
 name: GitHub Action Example with Python
 description: GitHub Action Example with Python
 inputs:
-  status_code:
+  http_code:
     description: HTTP Status Code
     required: true
   api_token:
