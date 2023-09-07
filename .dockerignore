@@ -1,0 +1,9 @@
+.tox/
+.venv/
+.*_cache/
+**/*.egg-info/
+build/
+
+# Jupyter Lab
+.ipynb_checkpoints
+.jupyter/
