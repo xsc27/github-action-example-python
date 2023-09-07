@@ -20,13 +20,13 @@ jobs:
     steps:
       - run: sudo sh -c
           'apt-get -qq update && apt-get install -y qemu-user-static'
+      - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
         id: py
         with:
           cache: pip
           cache-dependency-path: constraints.txt
       - run: python3 -m pip install setuptools_scm
-      - uses: actions/checkout@v3
       - uses: docker/metadata-action@v4
         id: meta
         with:
