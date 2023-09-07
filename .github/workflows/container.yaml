@@ -14,6 +14,8 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      packages: write
     steps:
       - run: sudo sh -c
           'apt-get -qq update && apt-get install -y qemu-user-static'
@@ -32,7 +34,7 @@ jobs:
       - uses: redhat-actions/buildah-build@v2
         id: build
         with:
-          archs: amd64, arm64, arm
+          # archs: amd64, arm64, arm
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           containerfiles: Containerfile
@@ -46,7 +48,7 @@ jobs:
           tags: ${{ steps.build.outputs.tags }}
           registry: ghcr.io/${{ github.repository_owner }}
           username: ${{ github.actor }}
-          password: ${{ github.token }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Create summary
         run: |
           cat >> "$GITHUB_STEP_SUMMARY" << EOL
