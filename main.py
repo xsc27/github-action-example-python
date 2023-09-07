@@ -13,16 +13,16 @@ if TYPE_CHECKING:  # Mypy compatiblity
     from typing_extensions import Self
 
 URL = "https://httpcats.com"
-HTTP_STATUS_CODE_RANGE = (100, 599)
+HTTP_CODE_RANGE = (100, 599)
 
 
 class Inputs(BaseSettings):
     """GitHub Action inputs."""
 
-    input_status_code: int
+    input_http_code: int
     input_api_token: SecretStr
 
-    @validator("input_status_code")
+    @validator("input_http_code")
     def check_status_code_range(cls: Self, val: int) -> int:  # noqa: N805
         """Check if the status code is in a valid range.
 
@@ -35,7 +35,7 @@ class Inputs(BaseSettings):
         Returns:
             int: A valid HTTP status code
         """
-        if val < HTTP_STATUS_CODE_RANGE[0] or val > HTTP_STATUS_CODE_RANGE[1]:
+        if val < HTTP_CODE_RANGE[0] or val > HTTP_CODE_RANGE[1]:
             msg = "Valid HTTP status codes are from 100 to 599."
             raise ValueError(msg)
         return val
@@ -65,7 +65,7 @@ def run(inputs: Inputs | None = None) -> dict[str, str | int]:
         "content-type": "application/json",
         "X-API-Key": inputs.input_api_token.get_secret_value(),
     }
-    resp = request("GET", f"{URL}/{inputs.input_status_code}.json", headers=headers)
+    resp = request("GET", f"{URL}/{inputs.input_http_code}.json", headers=headers)
 
     try:
         resp.raise_for_status()

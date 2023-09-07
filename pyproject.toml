@@ -28,8 +28,13 @@ classifiers = [
   "Programming Language :: Python :: 3.11",
 ]
 dynamic = [
-  "dependencies",
+  # "dependencies",
   "version",
+]
+dependencies = [
+  "httpx~=0.24.0",
+  "pydantic~=1.10",
+  "typer~=0.9.0",
 ]
 [project.optional-dependencies]
 cli = [
@@ -62,14 +67,14 @@ test = [
 "Issues" = "https://github.com/xsc27/github-action-example-python/issues"
 "Source" = "https://github.com/xsc27/github-action-example-python"
 [project.scripts]
-httpcat = "cli:run"
+httpcat = "cli:cli"
 
 [tool.setuptools]
 py-modules = ["main", "cli"]
 zip-safe = true
 
-[tool.setuptools.dynamic]
-dependencies = {file = ["requirements.txt"]}
+# [tool.setuptools.dynamic]
+# dependencies = {file = ["requirements.txt"]}
 
 [tool.setuptools_scm]
 

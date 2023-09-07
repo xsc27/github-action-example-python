@@ -21,8 +21,7 @@ jobs:
       - uses: actions/cache@v3
         with:
           path: |
-            .mypy_cache
-            .ruff_cache
+            .*_cache
             .tox
             ~/.cache/pip
             ~/.cache/pre-commit

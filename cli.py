@@ -6,17 +6,17 @@ import typer
 
 import main
 
+cli = typer.Typer(no_args_is_help=True)
 
-def _run(status_code: int, api_token: str = "") -> None:
+
+@cli.command()
+def run_cli(
+    input_http_code: int = typer.Argument(envvar="INPUT_HTTP_CODE"),
+    input_api_token: str = typer.Option("", envvar="INPUT_API_TOKEN"),  # RUF100,B008
+) -> None:
     """Get HTTP status code Cats."""
-    kwargs = {f"input_{k}": v for k, v in locals().items()}
-    main.run(main.Inputs.init(kwargs))
-
-
-def run() -> None:
-    """Run CLI."""
-    typer.run(_run)
+    main.run(main.Inputs.init(locals()))
 
 
 if __name__ == "__main__":
-    run()
+    cli()
