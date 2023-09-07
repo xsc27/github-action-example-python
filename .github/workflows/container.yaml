@@ -5,6 +5,7 @@ on:
     paths:
       - Containerfile
       - "**.py"
+      - pyproject.toml
   workflow_dispatch: {}
 
 concurrency:
