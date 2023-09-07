@@ -50,7 +50,7 @@ jobs:
           archs: amd64, arm64, arm
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          containerfiles: Containerfile
+          containerfiles: Dockerfile
           oci: true
           extra-args: |
             --volume=${{ steps.build-arg.outputs.PIP_CACHE }}:/root/.cache/pip
