@@ -12,3 +12,5 @@ COPY --from=build /opt/app/ /opt/app/
 USER guest
 ENV PYTHONPATH=/opt/app/
 ENTRYPOINT ["/opt/app/bin/httpcat"]
+
+LABEL org.opencontainers.image.authors="hire@carlosmeza.com"
