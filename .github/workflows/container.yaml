@@ -62,11 +62,10 @@ jobs:
         run: |
           cat >> "$GITHUB_STEP_SUMMARY" << EOL
           ## Container Details
-          - Image: ${{ steps.build.outputs.image }}
           - Tags: ${{ steps.build.outputs.tags }}
           - Tagged Image:
             ${{ steps.build.outputs.image-with-tag }}
           - Pushed to:
-            ${{ steps.push.outputs.registry-paths }}
+            $(jq -r '.[]' <<< ${{ steps.push.outputs.registry-paths }})
           - Digest: ${{ steps.push.outputs.digest }}
           EOL
