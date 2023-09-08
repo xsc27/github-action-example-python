@@ -1,6 +1,16 @@
-name: Test
+name: Action
 
 on:
+  workflow_call:
+    inputs:
+      http_code:
+        description: HTTP Status Code
+        required: true
+        type: string
+    secrets:
+      api_token:
+        description: API Token
+        required: true
   workflow_dispatch:
     inputs:
       http_code:
@@ -19,6 +29,6 @@ jobs:
         uses: ./
         with:
           http_code: ${{ inputs.http_code }}
-          api_token: ${{ inputs.api_token }}
+          api_token: ${{ inputs.api_token }}${{ secrets.api_token }}
       - run: echo 'Description - ${{ steps.httpcat.outputs.description }}'
       - run: echo 'Image - ${{ steps.httpcat.outputs.image }}'

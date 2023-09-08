@@ -7,8 +7,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  run:
-    name: lint
+
+  lint:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -31,3 +31,11 @@ jobs:
         env:
           RUFF_FORMAT: github
           TOXENV: ${{ matrix.env }}
+
+  action:
+    needs: [lint]
+    uses: ./.github/workflows/action.yaml
+    with:
+      http_code: 200
+    secrets:
+      api_token: ${{ secrets.API_TOKEN }}
