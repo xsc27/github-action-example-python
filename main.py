@@ -6,7 +6,7 @@ import json
 import sys
 from typing import TYPE_CHECKING, Any
 
-from httpx import HTTPError, request
+from httpx import ConnectError, HTTPError, request
 from pydantic import BaseSettings, SecretStr, ValidationError, validator
 
 if TYPE_CHECKING:  # Mypy compatiblity
@@ -65,7 +65,10 @@ def run(inputs: Inputs | None = None) -> dict[str, str | int]:
         "content-type": "application/json",
         "X-API-Key": inputs.input_api_token.get_secret_value(),
     }
-    resp = request("GET", f"{URL}/{inputs.input_http_code}.json", headers=headers)
+    try:
+        resp = request("GET", f"{URL}/{inputs.input_http_code}.json", headers=headers)
+    except ConnectError as err:
+        sys.exit(str(err))
 
     try:
         resp.raise_for_status()
