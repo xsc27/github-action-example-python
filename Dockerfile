@@ -8,10 +8,15 @@ RUN set -eux && \
   SETUPTOOLS_SCM_PRETEND_VERSION=${VERSION} \
     pip install --compile --target /opt/app --constraint /opt/src/constraints.txt /opt/src
 
-FROM docker.io/python:3.11-alpine
+FROM docker.io/python:3.11-alpine as main
 COPY --from=build /opt/app/ /opt/app/
 USER guest
 ENV PYTHONPATH=/opt/app/
 ENTRYPOINT ["/opt/app/bin/httpcat"]
 
 LABEL org.opencontainers.image.authors="hire@carlosmeza.com"
+
+FROM main
+COPY action.py /opt/app/
+USER root
+ENTRYPOINT ["python3", "/opt/app/action.py"]

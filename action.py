@@ -1,13 +1,17 @@
 #!/usr/bin/env python3
-"""GitHub Action module."""
+"""Shim for GitHub action."""
 from __future__ import annotations  # Python < 3.10 compatiblity
 
 import io
+import json
 import logging
 import os
+import sys
 from pathlib import Path
 
-import main
+from typer.testing import CliRunner
+
+from cli import cli
 
 
 def write(out_env: str, text: str) -> None:
@@ -25,7 +29,18 @@ def write(out_env: str, text: str) -> None:
 
 def run() -> None:
     """Run main GitHub Action business logic."""
-    data = main.run()
+    result = CliRunner().invoke(app=cli, args=sys.argv[1:])
+
+    if result.exit_code:
+        sys.exit(result.output.strip())
+
+    try:
+        data = json.loads(result.output)
+    except json.decoder.JSONDecodeError as err:
+        # handle `--help`
+        print(result.output)
+        sys.exit(f"{err.__class__.__name__}: {err}" if result.exit_code else 0)
+
     title = f"{data['status_code']} - {data['title']}"
     write("GITHUB_STEP_SUMMARY", f"## {title}\n![{title}]({data['url']}.jpg)")
     write("GITHUB_OUTPUT", f"description={data['title']}\nimage={data['url']}")

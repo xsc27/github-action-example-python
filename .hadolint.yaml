@@ -1,3 +1,5 @@
 failure-threshold: style
 ignored:
   - DL3042  # Avoid use of cache directory with pip. Use `pip install --no-cache-dir <package>`
+            # (Allow caching for faster multi-stage container)
+  - DL3002  # Last USER should not be root (required for GitHub action container)
