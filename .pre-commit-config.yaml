@@ -62,17 +62,16 @@ repos:
     rev: 6.1.0
     hooks:
       - id: flake8
-        additional_dependencies: [
-          dlint >=0.14.1,
-          flake8-bugbear >=23.5.9,
-          flake8-comprehensions >=3.12.0,
-          flake8-docstrings >=1.7.0,
-          Flake8-pyproject >=1.2.3,
-          flake8-pytest-style >=1.7.2,
-          flake8-rst-docstrings >=0.3.0,
-          flake8-simplify >=0.20.0,
-          pep8-naming >=0.13.3,
-        ]
+        additional_dependencies:
+          - dlint >=0.14.1
+          - flake8-bugbear >=23.5.9
+          - flake8-comprehensions >=3.12.0
+          - flake8-docstrings >=1.7.0
+          - Flake8-pyproject >=1.2.3
+          - flake8-pytest-style >=1.7.2
+          - flake8-rst-docstrings >=0.3.0
+          - flake8-simplify >=0.20.0
+          - pep8-naming >=0.13.3
   - repo: https://github.com/alessandrojcm/commitlint-pre-commit-hook
     rev: v9.5.0
     hooks:
@@ -83,7 +82,12 @@ repos:
     rev: v1.5.1
     hooks:
       - id: mypy
-        args: [--ignore-missing-imports, --allow-untyped-decorators, --allow-subclassing-any]
+        args:
+          - --ignore-missing-imports
+          - --allow-untyped-decorators
+          - --allow-subclassing-any
+          - --follow-imports=skip
+        additional_dependencies: [pydantic]
   - repo: https://github.com/rhysd/actionlint
     rev: v1.6.25
     hooks:

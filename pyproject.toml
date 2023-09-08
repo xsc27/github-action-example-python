@@ -84,10 +84,10 @@ line-length = 120
 [tool.ruff]
 # https://beta.ruff.rs/docs/rules/
 select = [
-  "F", "E", "W", "C90", "I", "N", "D", "UP", "YTT", "ANN", "ASYNC", "S", "BLE", "FBT", "B", "A", "COM", "C4",
+  "F", "E", "W", "C90", "I", "N", "D", "UP", "YTT", "ANN", "ASYNC", "S", "BLE", "B", "A", "COM", "C4",
   "DTZ", "T10", "EM", "EXE", "FA", "ISC", "ICN", "G", "INP", "PIE", "PYI", "PT", "Q", "RSE", "RET", "SLF",
   "SLOT", "SIM", "TID", "TCH", "INT", "ARG", "PTH", "TD", "FIX", "ERA", "PGH", "PL", "TRY", "FLY", "PERF", "RUF"
-]
+]  # FBT
 respect-gitignore = true
 show-fixes = true
 line-length = 120
@@ -107,7 +107,6 @@ allow-magic-value-types = []
 [tool.isort]
 profile = "black"
 line_length = 120
-known_first_party = "copier_template_test"
 
 [tool.flake8]
 ignore = [
@@ -142,6 +141,7 @@ exclude = [
   ".venv",
   "build",
 ]
+plugins = ["pydantic.mypy"]
 new_type_inference = true
 pretty = true
 python_version = "3.8"
@@ -150,11 +150,21 @@ show_error_code_links = true
 strict = true
 show_traceback = true
 warn_unused_configs = true
-
+follow_imports = "silent"
+warn_redundant_casts = true
+warn_unused_ignores = true
+disallow_any_generics = true
+check_untyped_defs = true
+no_implicit_reexport = true
 
 [[tool.mypy.overrides]]
 module = "tool.mypy.httpx.*"
 ignore_missing_imports = true
+
+[tool.pydantic-mypy]
+init_forbid_extra = true
+init_typed = true
+warn_required_dynamic_aliases = true
 
 [tool.bandit]
 skips = [

@@ -32,14 +32,14 @@ def run() -> None:
     result = CliRunner().invoke(app=cli, args=sys.argv[1:])
 
     if result.exit_code:
-        sys.exit(result.output.strip())
+        raise SystemExit(result.output.strip())
 
     try:
         data = json.loads(result.output)
     except json.decoder.JSONDecodeError as err:
         # handle `--help`
         print(result.output)
-        sys.exit(f"{err.__class__.__name__}: {err}" if result.exit_code else 0)
+        raise SystemExit(f"{err.__class__.__name__}: {err}" if result.exit_code else 0) from err
 
     title = f"{data['status_code']} - {data['title']}"
     write("GITHUB_STEP_SUMMARY", f"## {title}\n![{title}]({data['url']}.jpg)")
