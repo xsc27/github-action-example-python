@@ -1,0 +1,33 @@
+name: CI
+
+on: [push, workflow_dispatch]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-ci
+  cancel-in-progress: true
+
+jobs:
+
+  lint:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        env: [pre-commit]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        id: python
+      - uses: actions/cache@v3
+        with:
+          path: |
+            .*_cache
+            .tox
+            ~/.cache
+          key: tox-${{ runner.os }}-py${{ steps.python.outputs.python-version }}-${{
+            matrix.env }}-${{ hashFiles('constraints.txt', 'tox.ini') }}
+      - name: Run tox
+        run: pipx run 'tox~=4.2'
+        env:
+          RUFF_FORMAT: github
+          TOXENV: ${{ matrix.env }}
