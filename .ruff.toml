@@ -1,0 +1,26 @@
+# https://beta.ruff.rs/docs/rules/
+select = [
+  "F", "E", "W", "C90", "I", "N", "D", "UP", "YTT", "ANN", "ASYNC", "S", "FBT", "BLE", "B", "A", "COM", "C4",
+  "DTZ", "T10", "EM", "EXE", "FA", "ISC", "ICN", "G", "PIE", "PYI", "PT", "Q", "RSE", "RET", "SLF",
+  "SLOT", "SIM", "TID", "TCH", "INT", "ARG", "PTH", "TD", "FIX", "ERA", "PGH", "PL", "TRY", "FLY", "PERF", "RUF",
+]
+ignore = [
+  "ANN401",
+]
+respect-gitignore = true
+show-fixes = true
+line-length = 120
+# opt in to linting Jupyter Notebook
+include = ["*.py", "*.pyi", "**/pyproject.toml", "*.ipynb"]
+fix = true
+show-source = true
+
+[flake8-type-checking]
+exempt-modules = ["typing", "pydantic"]
+strict = true
+
+[pydocstyle]
+convention = "google"
+
+[pylint]
+# allow-magic-value-types = []
