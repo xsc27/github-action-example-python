@@ -1,0 +1,9 @@
+name: Hello World
+description: A Hello World GitHub Action example with Python.
+inputs:
+  name:
+    description: Who to greet.
+    default: World
+runs:
+  using: docker
+  image: Dockerfile

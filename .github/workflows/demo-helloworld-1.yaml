@@ -1,0 +1,16 @@
+name: Demo Hello World 1
+
+on:
+  workflow_dispatch:
+    inputs:
+      name:
+        description: Who to greet
+        default: World
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: xsc27/github-action-example-python/demo/helloworld/1@trunk
+        with:
+          name: ${{ inputs.name }}
