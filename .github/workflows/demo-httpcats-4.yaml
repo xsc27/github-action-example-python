@@ -1,0 +1,34 @@
+name: Demo HTTP Cats 4
+
+on:
+  workflow_dispatch:
+    inputs:
+      http_code:
+        description: HTTP Status Code
+        type: number
+        required: true
+      api_token:
+        description: API Token
+        default: f4k3k3y!
+        required: true
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - id: action
+        uses: xsc27/github-action-example-python/demo/httpcats/4@trunk
+        with:
+          http_code: ${{ inputs.http_code }}
+          api_token: ${{ inputs.api_token }}
+      - name: Create summary
+        run: |
+          TITLE='${{ inputs.http_code }} - ${{ steps.action.outputs.title }}'
+          tee -a "$GITHUB_STEP_SUMMARY" << EOL
+          ## $TITLE
+          ![$TITLE](${{ steps.action.outputs.image }})
+          ### Raw Data
+          \`\`\`json
+          $(jq -r <<< '${{ steps.action.outputs.data }}')
+          \`\`\`
+          EOL

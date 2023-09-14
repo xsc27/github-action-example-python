@@ -1,0 +1,21 @@
+name: HTTP Status Cats
+description: A GitHub action example using HTTP Status Cats
+  with Pydantic and Typer!
+inputs:
+  http_code:
+    description: HTTP Status Code
+    required: true
+  api_token:
+    description: API Token
+    required: true
+outputs:
+  title:
+    description: HTTP status code title
+  image:
+    description: Image URL
+  data:
+    description: JSON response
+runs:
+  using: docker
+  image: Dockerfile
+  entrypoint: /opt/app/action.py
