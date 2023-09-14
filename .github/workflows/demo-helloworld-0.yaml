@@ -1,0 +1,21 @@
+name: Demo Hello World 0
+
+on:
+  workflow_dispatch:
+    inputs:
+      name:
+        description: Who to greet
+        default: World
+      title:
+        description: Honorific prefix
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - id: action
+        uses: xsc27/github-action-example-python/demo/helloworld/0@trunk
+        with:
+          name: ${{ inputs.name }}
+          title: ${{ inputs.title }}
+      - run: echo '# ${{ steps.action.outputs.greeting }}' >> "$GITHUB_STEP_SUMMARY"
